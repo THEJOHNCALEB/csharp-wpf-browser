@@ -1,12 +1,242 @@
-﻿<Window x:Class="browser.Browser"
+<Window x:Class="browser.Browser"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:browser"
+        xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
-        Title="Browser" Height="450" Width="800">
+        Title="Modern Browser" Height="768" Width="1280"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+    
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Navigation Bar -->
+        <Border Grid.Row="0" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Navigation Buttons -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,10,0">
+                    <Button x:Name="BackButton" Content="←" Width="40" Height="40" 
+                            FontSize="20" FontWeight="Bold" Margin="0,0,5,0"
+                            Background="#F5F5F5" BorderBrush="#CCCCCC" BorderThickness="1"
+                            Cursor="Hand" ToolTip="Back" Click="BackButton_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#F5F5F5"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" 
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="5">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#E8E8E8"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.5"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button x:Name="ForwardButton" Content="→" Width="40" Height="40" 
+                            FontSize="20" FontWeight="Bold" Margin="0,0,5,0"
+                            Background="#F5F5F5" BorderBrush="#CCCCCC" BorderThickness="1"
+                            Cursor="Hand" ToolTip="Forward" Click="ForwardButton_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#F5F5F5"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" 
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="5">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#E8E8E8"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.5"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button x:Name="RefreshButton" Content="⟳" Width="40" Height="40" 
+                            FontSize="20" FontWeight="Bold" Margin="0,0,5,0"
+                            Background="#F5F5F5" BorderBrush="#CCCCCC" BorderThickness="1"
+                            Cursor="Hand" ToolTip="Refresh" Click="RefreshButton_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#F5F5F5"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" 
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="5">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#E8E8E8"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button x:Name="HomeButton" Content="⌂" Width="40" Height="40" 
+                            FontSize="20" FontWeight="Bold"
+                            Background="#F5F5F5" BorderBrush="#CCCCCC" BorderThickness="1"
+                            Cursor="Hand" ToolTip="Home" Click="HomeButton_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#F5F5F5"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" 
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="5">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#E8E8E8"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+
+                <!-- Address Bar -->
+                <Border Grid.Column="1" Background="White" BorderBrush="#CCCCCC" 
+                        BorderThickness="1" CornerRadius="20" Padding="15,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="🔒" FontSize="14" 
+                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        
+                        <TextBox x:Name="AddressBar" Grid.Column="1"
+                                 VerticalAlignment="Center"
+                                 BorderThickness="0"
+                                 FontSize="14"
+                                 Background="Transparent"
+                                 Foreground="#333333"
+                                 KeyDown="AddressBar_KeyDown">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="TextBox">
+                                                <ScrollViewer x:Name="PART_ContentHost" 
+                                                            Focusable="false"
+                                                            HorizontalScrollBarVisibility="Hidden"
+                                                            VerticalScrollBarVisibility="Hidden"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Grid>
+                </Border>
+
+                <!-- Menu Button -->
+                <Button x:Name="MenuButton" Grid.Column="2" Content="⋮" Width="40" Height="40" 
+                        FontSize="24" FontWeight="Bold" Margin="10,0,0,0"
+                        Background="#F5F5F5" BorderBrush="#CCCCCC" BorderThickness="1"
+                        Cursor="Hand" ToolTip="Menu">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#F5F5F5"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" 
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="5">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#E8E8E8"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Browser View -->
+        <wpf:ChromiumWebBrowser x:Name="BrowserControl" Grid.Row="1" />
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="10,5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock x:Name="StatusText" Grid.Column="0" 
+                           Text="Ready" 
+                           VerticalAlignment="Center"
+                           Foreground="#666666"
+                           FontSize="12"/>
+                
+                <ProgressBar x:Name="LoadingProgress" Grid.Column="1"
+                             Width="100" Height="4"
+                             Margin="10,0,0,0"
+                             Visibility="Collapsed"/>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
